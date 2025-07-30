@@ -1,7 +1,8 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 
-const API = import.meta.env.API || 'http://localhost:8000/v1/api';
+// const API = import.meta.env.API || 'http://localhost:8000/v1/api';
+const API = import.meta.env.VITE_API || 'http://localhost:8000/v1/api';
 
 export const signup = createAsyncThunk(
   'auth/signup',
@@ -11,7 +12,7 @@ export const signup = createAsyncThunk(
         withCredentials: true,
       });
 
-      // Store token in localStorage
+      // // Store token in localStorage
       // if (res.data.data?.token) {
       //   localStorage.setItem('token', res.data.data.token);
       // }

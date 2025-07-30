@@ -1,7 +1,7 @@
-import { z } from 'zod';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useForm } from 'react-hook-form';
-import { Button } from '@/components/ui/button';
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import { Button } from "@/components/ui/button";
 import {
   Form,
   FormControl,
@@ -9,9 +9,13 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
-import { Link } from 'react-router';
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { Link, useNavigate } from "react-router";
+import { useDispatch, useSelector } from "react-redux";
+import type { AppDispatch, RootState } from "@/store";
+import { useEffect } from "react";
+import { login } from "@/slice/authSlice";
 
 const formSchema: z.ZodObject<
   {
@@ -20,40 +24,46 @@ const formSchema: z.ZodObject<
   },
   z.core.$strip
 > = z.object({
-  email: z.string().email({ message: 'Enter a valid email' }),
-  password: z.string().min(1, { message: 'Password is required' }),
+  email: z.string().email({ message: "Enter a valid email" }),
+  password: z.string().min(1, { message: "Password is required" }),
 });
 
 const Login = () => {
+  const dispatch = useDispatch<AppDispatch>();
+  const navigate = useNavigate();
+  const { error, user } = useSelector((state: RootState) => state.auth);
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      email: '',
-      password: '',
+      email: "",
+      password: "",
     },
   });
 
   function onSubmit(values: z.infer<typeof formSchema>) {
+    dispatch(login(values));
     // Handle login logic here
     console.log(values);
   }
 
+  useEffect(() => {
+    if (user) {
+      navigate("/"); // Navigate to home page
+    }
+  }, [user, navigate]);
   return (
     <div className="">
-      <h2 className="text-2xl font-bold mb-2 text-center">Welcome back</h2>
+      <h2 className="mb-2 text-center text-2xl font-bold">Welcome back</h2>
       <p className="mb-6 text-center text-gray-500">
         Enter your credentials to login to your account
       </p>
 
       <Button
         variant="outline"
-        className="w-full mb-4 flex items-center justify-center gap-2"
+        className="mb-4 flex w-full items-center justify-center gap-2"
       >
         {/* Google SVG */}
-        <svg
-          className="w-5 h-5"
-          viewBox="0 0 48 48"
-        >
+        <svg className="h-5 w-5" viewBox="0 0 48 48">
           <g>
             <path
               fill="#FFC107"
@@ -76,17 +86,14 @@ const Login = () => {
         Login with Google
       </Button>
 
-      <div className="flex items-center my-4">
-        <div className="flex-grow h-px bg-gray-200" />
-        <span className="mx-2 text-gray-400 text-sm">or continue with</span>
-        <div className="flex-grow h-px bg-gray-200" />
+      <div className="my-4 flex items-center">
+        <div className="h-px flex-grow bg-gray-200" />
+        <span className="mx-2 text-sm text-gray-400">or continue with</span>
+        <div className="h-px flex-grow bg-gray-200" />
       </div>
 
       <Form {...form}>
-        <form
-          onSubmit={form.handleSubmit(onSubmit)}
-          className="space-y-4"
-        >
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
           <FormField
             control={form.control}
             name="email"
@@ -94,10 +101,7 @@ const Login = () => {
               <FormItem>
                 <FormLabel>Email</FormLabel>
                 <FormControl>
-                  <Input
-                    placeholder="you@example.com"
-                    {...field}
-                  />
+                  <Input placeholder="you@example.com" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -110,16 +114,13 @@ const Login = () => {
               <FormItem>
                 <FormLabel>Password</FormLabel>
                 <FormControl>
-                  <Input
-                    type="password"
-                    placeholder="Password"
-                    {...field}
-                  />
+                  <Input type="password" placeholder="Password" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
             )}
           />
+          <p>{error}</p>
           <div className="text-right">
             <Link
               to="/auth/forgot-password"
@@ -130,18 +131,15 @@ const Login = () => {
           </div>
           <Button
             type="submit"
-            className="w-full hover:bg-[#3A4374] transition-all duration-200 bg-[#AD1FEA]"
+            className="w-full bg-[#AD1FEA] transition-all duration-200 hover:bg-[#3A4374]"
           >
             Login
           </Button>
         </form>
       </Form>
       <div className="mt-4 text-center">
-        Don't have an account?{' '}
-        <Link
-          to="/auth/signup"
-          className="text-blue-600 hover:underline"
-        >
+        Don't have an account?{" "}
+        <Link to="/auth/signup" className="text-blue-600 hover:underline">
           Sign up
         </Link>
       </div>
