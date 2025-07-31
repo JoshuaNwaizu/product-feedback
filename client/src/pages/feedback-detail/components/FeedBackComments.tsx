@@ -1,100 +1,110 @@
-const FeedBackComments = () => {
-  return (
-    <div className="flex w-[20.4375rem] flex-col gap-8 bg-white px-4 py-5">
-      <h1 className="text-[1.125rem] font-bold text-[#3A4374]">4 Comments</h1>
-      <div className="flex flex-col gap-4">
-        <div className="item-center flex justify-between">
-          <div className="flex items-center gap-3">
-            <img
-              src="/user-images/image-elijah.jpg"
-              alt="image"
-              className="h-[2.5rem] w-[2.5rem] rounded-full"
-            />
-            <p className="flex flex-col">
-              <span className="text-[.8125rem] font-bold text-[#3A4374]">
-                James Skinner
-              </span>
-              <span className="text-[.8125rem] text-gray-500">
-                @hummingbird1
-              </span>
-            </p>
-          </div>
-          <p className="text-[.8125rem] font-semibold text-[#4661E6]">Reply</p>
-        </div>
-        <p className="text-[.8125rem] text-[#647196]">
-          Also, please allow styles to be applied based on system preferences. I
-          would love to be able to browse Frontend Mentor in the evening after
-          my device’s dark mode turns on without the bright background it
-          currently has.
-        </p>
-      </div>
+type Reply = {
+  content: string;
+  replyingTo: string;
+  user: {
+    image: string;
+    name: string;
+    username: string;
+  };
+};
 
-      <hr />
-      {/* comments with replies */}
-      <div className="flex flex-col gap-6">
-        <div>
-          <div className="flex flex-col gap-4">
-            <div className="item-center flex justify-between">
-              <div className="flex items-center gap-3">
-                <img
-                  src="/user-images/image-james.jpg"
-                  alt="image"
-                  className="h-[2.5rem] w-[2.5rem] rounded-full"
-                />
-                <p className="flex flex-col">
-                  <span className="text-[.8125rem] font-bold text-[#3A4374]">
-                    Elijah Moss
-                  </span>
-                  <span className="text-[.8125rem] text-gray-500">
-                    @hexagon.bestagon
-                  </span>
-                </p>
-              </div>
-              <p className="text-[.8125rem] font-semibold text-[#4661E6]">
-                Reply
-              </p>
-            </div>
-            <p className="text-[.8125rem] text-[#647196]">
-              Second this! I do a lot of late night coding and reading. Adding a
-              dark theme can be great for preventing eye strain and the
-              headaches that result. It’s also quite a trend with modern apps
-              and apparently saves battery life.
-            </p>
-          </div>
-        </div>
-        <div className="flex justify-between">
-          <div className="h-[13.5rem] w-[0.0625rem] bg-[#647196]"></div>
-          <div>
-            <div className="flex w-[16rem] flex-col gap-4">
-              <div className="item-center flex justify-between">
-                <div className="flex items-center gap-3">
-                  <img
-                    src="/user-images/image-anne.jpg"
-                    alt="image"
-                    className="h-[2.5rem] w-[2.5rem] rounded-full"
-                  />
-                  <p className="flex flex-col">
-                    <span className="text-[.8125rem] font-bold text-[#3A4374]">
-                      Anne Valentine
-                    </span>
-                    <span className="text-[.8125rem] text-gray-500">
-                      @annev1990
-                    </span>
+type Comment = {
+  id: number;
+  content: string;
+  user: {
+    image: string;
+    name: string;
+    username: string;
+  };
+  replies?: Reply[];
+};
+
+const FeedBackComments = ({ comments }: { comments: Comment[] }) => {
+  return (
+    <div className="w-full flex items-center max-w-md">
+      <div className="flex mx-[1.5rem]  w-full flex-col gap-5 rounded-[0.625rem] bg-white px-6 py-5">
+        <h1 className="text-[1.125rem] font-bold text-[#3A4374]">
+          {comments.length} {comments?.length === 1 ? 'comment' : 'comments'}
+        </h1>
+        <div className="flex flex-col  gap-5">
+          {comments.map((comment) => (
+            <div
+              key={comment.id}
+              className="flex flex-col gap-4"
+            >
+              <div className="flex flex-col gap-4">
+                <div className="item-center flex justify-between">
+                  <div className="flex items-center gap-3">
+                    <img
+                      src={comment.user.image.replace('./assets', '')}
+                      alt={comment.user.name}
+                      className="h-[2.5rem] w-[2.5rem] rounded-full"
+                    />
+                    <p className="flex flex-col">
+                      <span className="text-[.8125rem] font-bold text-[#3A4374]">
+                        {comment.user.name}
+                      </span>
+                      <span className="text-[.8125rem] text-gray-500">
+                        @{comment.user.username}
+                      </span>
+                    </p>
+                  </div>
+                  <p className="text-[.8125rem] font-semibold text-[#4661E6]">
+                    Reply
                   </p>
                 </div>
-                <p className="text-[.8125rem] font-semibold text-[#4661E6]">
-                  Reply
+                <p className="text-[.8125rem] text-[#647196]">
+                  {comment.content}
                 </p>
               </div>
-              <p className="text-[.8125rem] text-[#647196]">
-                <span className="font-bold text-[#AD1FEA]">@hummingbird1 </span>
-                While waiting for dark mode, there are browser extensions that
-                will also do the job. Search for "dark theme” followed by your
-                browser. There might be a need to turn off the extension for
-                sites with naturally black backgrounds though.
-              </p>
+              {/* Render replies if any */}
+              <div className=" flex flex-col gap-5">
+                {comment.replies && comment.replies.length > 0 && (
+                  <div className="flex justify-between mt-4 ">
+                    <div className="h-[13.5rem] w-[0.0625rem] bg-[#647196]"></div>
+                    <div>
+                      <div className=" w-full pl-[2rem] flex flex-col gap-6">
+                        {comment.replies.map((reply, idx) => (
+                          <div
+                            key={idx}
+                            className="flex bggre flex-col gap-4"
+                          >
+                            <div className="item-center flex justify-between">
+                              <div className="flex items-center gap-3">
+                                <img
+                                  src={reply.user.image.replace('./assets', '')}
+                                  alt={reply.user.name}
+                                  className="h-[2.5rem] w-[2.5rem] rounded-full"
+                                />
+                                <p className="flex flex-col">
+                                  <span className="text-[.8125rem] font-bold text-[#3A4374]">
+                                    {reply.user.name}
+                                  </span>
+                                  <span className="text-[.8125rem] text-gray-500">
+                                    @{reply.user.username}
+                                  </span>
+                                </p>
+                              </div>
+                              <p className="text-[.8125rem] font-semibold text-[#4661E6]">
+                                Reply
+                              </p>
+                            </div>
+                            <p className="text-[.8125rem] text-[#647196]">
+                              <span className="font-bold text-[#AD1FEA]">
+                                @{reply.replyingTo + ' '}
+                              </span>
+                              {reply.content}
+                            </p>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                )}
+                <hr />
+              </div>{' '}
             </div>
-          </div>
+          ))}
         </div>
       </div>
     </div>

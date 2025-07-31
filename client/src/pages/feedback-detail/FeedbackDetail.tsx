@@ -8,7 +8,8 @@ import AddCommentCard from "./components/AddCommentCard";
 const FeedbackDetail = () => {
   const { id } = useParams();
   const feedback = data.productRequests.find((item) => item.id === Number(id));
-  console.log(feedback);
+  // console.log(feedback);
+  const comments = feedback?.comments || [];
   if (!feedback) return <div>Feedback not found</div>;
 
   return (
@@ -16,7 +17,7 @@ const FeedbackDetail = () => {
       <FeedbackNav />
       <section className="my-[6rem] flex flex-col items-center gap-5 bg-[#F7F8FD]">
         <FeedBackCard {...feedback} />
-        <FeedBackComments />
+        <FeedBackComments comments={comments} />
         <AddCommentCard />
       </section>
     </div>
