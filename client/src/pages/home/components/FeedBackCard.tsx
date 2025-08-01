@@ -1,7 +1,13 @@
-import { Link } from 'react-router';
+import {
+  selectUpvotes,
+  selectUserUpvoteStatus,
+  toggleUpvote,
+} from "@/slice/feedbackSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { Link } from "react-router";
 
 type FeedBackCardProps = {
-  id?: number;
+  id: number;
   title?: string;
   description?: string;
   category?: string;
@@ -14,15 +20,24 @@ const FeedBackCard = ({
   title,
   description,
   category,
-  upvotes,
+  upvotes: initialUpvotes = 0,
   comments,
 }: FeedBackCardProps) => {
+  const dispatch = useDispatch();
+  const upvotes = useSelector(selectUpvotes)[id] ?? initialUpvotes;
+  const hasUpvoted = useSelector(selectUserUpvoteStatus)[id] ?? false;
+
+  const handleUpvote = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    dispatch(toggleUpvote(id));
+  };
   return (
     <Link
       to={`/feedback-detail/${id}`}
-      className="w-full flex items-center max-w-md"
+      className="flex w-full max-w-md items-center"
     >
-      <section className="mx-[1.5rem] flex h-[12rem]  w-full  flex-col rounded-[.6rem] bg-[#fff]">
+      <section className="mx-[1.5rem] flex h-[12rem] w-full flex-col rounded-[.6rem] bg-[#fff]">
         <div className="flex flex-col gap-2.5 px-6 py-5">
           <h2 className="font-bold leading-normal tracking-[-0.01131rem] text-[#3A4374]">
             {title}
@@ -35,12 +50,11 @@ const FeedBackCard = ({
             </p>
           </div>
           <div className="flex items-center justify-between">
-            <p className="flex h-[2rem] w-[4.3rem] items-center justify-center gap-1 rounded-[.6rem] bg-[#F2F4FF]">
-              <svg
-                width="10"
-                height="7"
-                xmlns="http://www.w3.org/2000/svg"
-              >
+            <p
+              onClick={handleUpvote}
+              className="flex h-[2rem] w-[4.3rem] items-center justify-center gap-1 rounded-[.6rem] bg-[#F2F4FF]"
+            >
+              <svg width="10" height="7" xmlns="http://www.w3.org/2000/svg">
                 <path
                   d="M1 6l4-4 4 4"
                   stroke="#4661E6"
@@ -56,11 +70,7 @@ const FeedBackCard = ({
             </p>
 
             <p className="flex h-[2rem] w-[4.3rem] items-center justify-center gap-1 rounded-[.6rem] text-[#3A4374]">
-              <svg
-                width="18"
-                height="16"
-                xmlns="http://www.w3.org/2000/svg"
-              >
+              <svg width="18" height="16" xmlns="http://www.w3.org/2000/svg">
                 <path
                   d="M2.62 16H1.346l.902-.91c.486-.491.79-1.13.872-1.823C1.036 11.887 0 9.89 0 7.794 0 3.928 3.52 0 9.03 0 14.87 0 18 3.615 18 7.455c0 3.866-3.164 7.478-8.97 7.478-1.017 0-2.078-.137-3.025-.388A4.705 4.705 0 012.62 16z"
                   fill="#CDD2EE"
