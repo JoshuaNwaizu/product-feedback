@@ -1,16 +1,30 @@
-import { Button } from '@/components/ui/button';
+import { Button } from "@/components/ui/button";
+import { Link } from "react-router";
 
 const SortBy = () => {
   return (
-    <div className="fixed top-[5rem] px-6 bg-[#373F68] left-0 w-full h-[3.5rem]  bg-cover bg-center bg-no-repeat flex justify-center items-center gap-2 z-50">
-      <div className="flex justify-between items-center w-full">
-        <p className="text-white text-[.8rem] flex items-center gap-1">
+    <div className="fixed left-0 top-[5rem] z-50 flex h-[3.5rem] w-full items-center justify-center gap-2 bg-[#373F68] bg-cover bg-center bg-no-repeat px-6">
+      <div className="flex w-full items-center justify-between">
+        <p className="flex items-center gap-1 text-[.8rem] text-white">
           <span className="">Sort by:</span>
-          <span className="font-bold">{'Most Upvotes'}</span>
+          <span className="flex items-center gap-1 font-bold">
+            {"Most Upvotes"}{" "}
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="9"
+              height="7"
+              viewBox="0 0 9 7"
+              fill="none"
+            >
+              <path d="M1 6L5 2L9 6" stroke="white" stroke-width="2" />
+            </svg>
+          </span>
         </p>
-        <Button className="bg-[#AD1FEA] text-[.8rem] font-bold h-[2.5rem]">
-          + Add Feedback
-        </Button>
+        <Link to="/create-feedback">
+          <Button className="h-[2.5rem] bg-[#AD1FEA] text-[.8rem] font-bold">
+            + Add Feedback
+          </Button>
+        </Link>
       </div>
     </div>
   );

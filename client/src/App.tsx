@@ -5,6 +5,7 @@ import AuthLayout from "./layouts/AuthLayout";
 import Signup from "./pages/auth/Signup";
 import Home from "./pages/home/Home";
 import FeedbackDetail from "./pages/feedback-detail/FeedbackDetail";
+import CreateNewFeedback from "./pages/edit-feedback/CreateNewFeedback";
 
 function App() {
   const router = createBrowserRouter([
@@ -23,6 +24,10 @@ function App() {
     {
       path: "/feedback-detail/:id",
       element: <FeedbackDetail />,
+    },
+    {
+      path: "create-feedback",
+      element: <CreateNewFeedback />,
     },
   ]);
   return <RouterProvider router={router} />;

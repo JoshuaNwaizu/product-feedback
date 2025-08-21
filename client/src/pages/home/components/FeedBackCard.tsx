@@ -1,6 +1,6 @@
 import {
   selectUpvotes,
-  selectUserUpvoteStatus,
+  // selectUserUpvoteStatus,
   toggleUpvote,
 } from "@/slice/feedbackSlice";
 import { useDispatch, useSelector } from "react-redux";
@@ -25,7 +25,7 @@ const FeedBackCard = ({
 }: FeedBackCardProps) => {
   const dispatch = useDispatch();
   const upvotes = useSelector(selectUpvotes)[id] ?? initialUpvotes;
-  const hasUpvoted = useSelector(selectUserUpvoteStatus)[id] ?? false;
+  // const hasUpvoted = useSelector(selectUserUpvoteStatus)[id] ?? false;
 
   const handleUpvote = (e: React.MouseEvent) => {
     e.preventDefault();

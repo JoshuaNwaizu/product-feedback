@@ -1,33 +1,31 @@
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import axios from 'axios';
+import { API, type AuthState } from "@/types/typesSlice";
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import axios from "axios";
 
-// const API = import.meta.env.API || 'http://localhost:8000/v1/api';
-const API = import.meta.env.VITE_API || 'http://localhost:8000/v1/api';
-
+const initialState: AuthState = {
+  user: null,
+  loading: false,
+  error: null,
+  token: null,
+};
 export const signup = createAsyncThunk(
-  'auth/signup',
+  "auth/signup",
   async (payload: { email: string; password: string }, { rejectWithValue }) => {
     try {
       const res = await axios.post(`${API}/create-account`, payload, {
         withCredentials: true,
       });
-
-      // // Store token in localStorage
-      // if (res.data.data?.token) {
-      //   localStorage.setItem('token', res.data.data.token);
-      // }
-
       return res.data.data.user;
     } catch (error: any) {
       // Handle specific error messages from backend
-      const message = error.response?.data?.message || 'Signup failed';
+      const message = error.response?.data?.message || "Signup failed";
       return rejectWithValue(message);
     }
   },
 );
 
 export const login = createAsyncThunk(
-  'auth/login',
+  "auth/login",
   async (payload: { email: string; password: string }) => {
     const res = await axios.post(`${API}/login`, payload, {
       withCredentials: true,
@@ -36,18 +34,13 @@ export const login = createAsyncThunk(
   },
 );
 
-export const logout = createAsyncThunk('auth/logout', async () => {
+export const logout = createAsyncThunk("auth/logout", async () => {
   await axios.get(`${API}/logout`, { withCredentials: true });
 });
 
 const authSlice = createSlice({
-  name: 'auth',
-  initialState: {
-    user: null,
-    loading: false,
-    error: null as string | null,
-    token: null,
-  },
+  name: "auth",
+  initialState,
   reducers: {},
   extraReducers: (builder) => {
     builder
@@ -62,7 +55,7 @@ const authSlice = createSlice({
       })
       .addCase(signup.rejected, (state, action) => {
         state.loading = false;
-        state.error = (action.payload as string) || 'Signup failed';
+        state.error = (action.payload as string) || "Signup failed";
       })
       .addCase(login.pending, (state) => {
         state.loading = true;
